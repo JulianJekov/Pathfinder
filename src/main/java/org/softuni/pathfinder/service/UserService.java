@@ -1,10 +1,12 @@
 package org.softuni.pathfinder.service;
 
-import org.softuni.pathfinder.model.entity.User;
-
-import java.util.List;
+import org.softuni.pathfinder.model.dto.UserLoginDto;
+import org.softuni.pathfinder.model.dto.UserRegisterDTO;
 
 public interface UserService {
+    void register(UserRegisterDTO userRegisterDTO);
 
-    List<User> getUsers();
+    boolean login(UserLoginDto userLoginDto);
+
+    void logout();
 }
