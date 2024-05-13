@@ -83,4 +83,14 @@ public class Route extends BaseEntity{
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public Route setCategories(Set<Category> categories) {
+        this.categories = categories;
+        return this;
+    }
+
 }

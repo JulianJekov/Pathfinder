@@ -1,19 +1,19 @@
 package org.softuni.pathfinder.model.dto;
 
-public class UserLoginDto {
+public class UserLoginDTO {
 
     private String username;
 
     private String password;
 
-    public UserLoginDto() {
+    public UserLoginDTO() {
     }
 
     public String getUsername() {
         return username;
     }
 
-    public UserLoginDto setUsername(String username) {
+    public UserLoginDTO setUsername(String username) {
         this.username = username;
         return this;
     }
@@ -22,7 +22,7 @@ public class UserLoginDto {
         return password;
     }
 
-    public UserLoginDto setPassword(String password) {
+    public UserLoginDTO setPassword(String password) {
         this.password = password;
         return this;
     }

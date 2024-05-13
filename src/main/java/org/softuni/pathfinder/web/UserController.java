@@ -1,6 +1,6 @@
 package org.softuni.pathfinder.web;
 
-import org.softuni.pathfinder.model.dto.UserLoginDto;
+import org.softuni.pathfinder.model.dto.UserLoginDTO;
 import org.softuni.pathfinder.model.dto.UserRegisterDTO;
 import org.softuni.pathfinder.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(UserLoginDto userLoginDto) {
+    public ModelAndView login(UserLoginDTO userLoginDto) {
 
         final boolean isLogged = this.userService.login(userLoginDto);
 

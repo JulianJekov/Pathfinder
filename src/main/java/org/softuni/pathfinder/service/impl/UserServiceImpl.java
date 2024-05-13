@@ -1,7 +1,7 @@
 package org.softuni.pathfinder.service.impl;
 
 import org.modelmapper.ModelMapper;
-import org.softuni.pathfinder.model.dto.UserLoginDto;
+import org.softuni.pathfinder.model.dto.UserLoginDTO;
 import org.softuni.pathfinder.model.dto.UserRegisterDTO;
 import org.softuni.pathfinder.model.entity.User;
 import org.softuni.pathfinder.repository.UserRepository;
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean login(UserLoginDto userLoginDto) {
+    public boolean login(UserLoginDTO userLoginDto) {
 
         final String username = userLoginDto.getUsername();
 
@@ -62,5 +62,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void logout() {
         this.loggedUser.logout();
+    }
+
+    @Override
+    public User getLoggedUser() {
+        return this.userRepository.findByUsername(loggedUser.getUsername());
     }
 }
