@@ -44,13 +44,6 @@ public class LoggedUser {
         return this;
     }
 
-    public void logout() {
-        this.setLogged(false);
-        this.setUsername(null);
-        this.setEmail(null);
-        this.setFullName(null);
-    }
-
     public boolean isLogged() {
         return isLogged;
     }
@@ -58,5 +51,19 @@ public class LoggedUser {
     public LoggedUser setLogged(boolean logged) {
         isLogged = logged;
         return this;
+    }
+
+    public void logout() {
+        this.setLogged(false);
+        this.setUsername(null);
+        this.setEmail(null);
+        this.setFullName(null);
+    }
+
+    public void login(String username, String email, String fullName) {
+        this.setLogged(true);
+        this.setUsername(username);
+        this.setEmail(email);
+        this.setFullName(fullName);
     }
 }

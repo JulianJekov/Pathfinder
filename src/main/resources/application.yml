@@ -1,0 +1,28 @@
+spring:
+    application:
+        name: pathfinder
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        password:
+        username:
+        url: jdbc:mysql://localhost:3306/pathfinder?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
+    devtools:
+        livereload:
+            enabled: true
+        restart:
+            enabled: true
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+        defer-datasource-initialization: true
+        hibernate:
+            ddl-auto: update
+        open-in-view: false
+        properties:
+            hibernate:
+                format_sql: true
+    sql:
+        init:
+            mode: always
+    thymeleaf:
+        cache: false
+

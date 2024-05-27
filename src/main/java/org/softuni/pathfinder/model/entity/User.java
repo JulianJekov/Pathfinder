@@ -1,6 +1,7 @@
 package org.softuni.pathfinder.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 import org.softuni.pathfinder.model.enums.Level;
@@ -26,6 +27,7 @@ public class User extends BaseEntity{
     private Integer age;
 
     @Column(name = "email", unique = true)
+    @Email
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
