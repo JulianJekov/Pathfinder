@@ -4,12 +4,11 @@ import org.softuni.pathfinder.model.dto.UserLoginDTO;
 import org.softuni.pathfinder.model.dto.UserRegisterDTO;
 import org.softuni.pathfinder.model.entity.User;
 
-public interface UserService {
+public interface AuthenticationService {
     void register(UserRegisterDTO userRegisterDTO);
 
     boolean login(UserLoginDTO userLoginDto);
 
     void logout();
 
-    User getLoggedUser();
 }

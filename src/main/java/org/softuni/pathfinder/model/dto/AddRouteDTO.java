@@ -1,6 +1,7 @@
 package org.softuni.pathfinder.model.dto;
 
-import org.softuni.pathfinder.model.enums.CategoryType;
+import org.softuni.pathfinder.model.entity.User;
+import org.softuni.pathfinder.model.enums.CategoryNames;
 import org.softuni.pathfinder.model.enums.Level;
 
 import java.util.Set;
@@ -15,7 +16,9 @@ public class AddRouteDTO {
 
     private String videoUrl;
 
-    private Set<CategoryType> categories;
+    private User author;
+
+    private Set<CategoryNames> categories;
 
     public AddRouteDTO() {
     }
@@ -56,12 +59,21 @@ public class AddRouteDTO {
         return this;
     }
 
-    public Set<CategoryType> getCategories() {
+    public Set<CategoryNames> getCategories() {
         return categories;
     }
 
-    public AddRouteDTO setCategories(Set<CategoryType> categories) {
+    public AddRouteDTO setCategories(Set<CategoryNames> categories) {
         this.categories = categories;
+        return this;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public AddRouteDTO setAuthor(User author) {
+        this.author = author;
         return this;
     }
 }

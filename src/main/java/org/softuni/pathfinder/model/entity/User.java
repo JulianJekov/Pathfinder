@@ -2,7 +2,6 @@ package org.softuni.pathfinder.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 import org.softuni.pathfinder.model.enums.Level;
 
@@ -34,7 +33,7 @@ public class User extends BaseEntity{
     @JoinTable(name = "users_roles", joinColumns =
     @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns =
     @JoinColumn(name = "roles_id", referencedColumnName = "id"))
-    private Set<Role> role;
+    private Set<Role> roles;
 
     @Enumerated(EnumType.STRING)
     private Level level;
@@ -46,55 +45,62 @@ public class User extends BaseEntity{
         return username;
     }
 
-    public void setUsername(String username) {
+    public User setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public User setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
+    public User setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Set<Role> getRole() {
-        return role;
-    }
-
-    public void setRole(Set<Role> role) {
-        this.role = role;
-    }
-
-    public Level getLevel() {
-        return level;
-    }
-
-    public void setLevel(Level level) {
-        this.level = level;
+        return this;
     }
 
     public Integer getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public User setAge(Integer age) {
         this.age = age;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public User setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public User setRoles(Set<Role> roles) {
+        this.roles = roles;
+        return this;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public User setLevel(Level level) {
+        this.level = level;
+        return this;
     }
 }

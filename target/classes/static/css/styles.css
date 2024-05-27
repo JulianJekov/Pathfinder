@@ -357,3 +357,34 @@ body {
     height: 40px;
     background-color: #0833e3
 }
+
+.myBtn {
+    background-attachment: scroll;
+    background-clip: border-box;
+    background-color: rgb(221, 221, 221);
+    background-image: none;
+    background-origin: padding-box;
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-repeat: repeat;
+    background-size: auto;
+    box-shadow: rgba(104, 104, 104, 0.8) 0px 1px 5px 0px;
+    box-sizing: border-box;
+    color: rgb(51, 51, 51);
+    cursor: pointer;
+    display: block;
+    font-size: 17px;
+    list-style: none outside none;
+    padding: 0.8rem;
+    text-align: center;
+    text-size-adjust: 100%;
+    text-transform: uppercase;
+    width: 221px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    border: none;
+}
+
+.myBtn:hover {
+    background-color: var(--dark);
+    color: var(--light);
+}

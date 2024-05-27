@@ -20,17 +20,19 @@
             <li>
                 <a th:href="@{/about}">About</a>
             </li>
-            <li>
+            <li th:if="${@loggedUser.isLogged()}">
                 <a th:href="@{/routes/add}">Add new route</a>
             </li>
-            <li>
+            <li th:if="${@loggedUser.isLogged()}">
                 <a href="/">Profile</a>
             </li>
-            <li>
+            <li th:if="${@loggedUser.isLogged() && @loggedUser.isAdmin()}">
                 <a href="/">Admin</a>
             </li>
             <li th:if="${@loggedUser.isLogged()}">
-                <a th:href="@{/users/logout}">Logout</a>
+                <form  th:action="@{users/logout}" th:method="POST">
+                    <input class="myBtn" type="submit" value="Logout">
+                </form>
             </li>
             <li>
                 <th:block th:text="${@loggedUser.username} == null ? 'no user' : ${@loggedUser.username}"></th:block>

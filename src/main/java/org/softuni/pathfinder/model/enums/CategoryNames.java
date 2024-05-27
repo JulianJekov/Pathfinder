@@ -1,5 +1,5 @@
 package org.softuni.pathfinder.model.enums;
 
-public enum CategoryType {
+public enum CategoryNames {
     PEDESTRIAN, BICYCLE, MOTORCYCLE, CAR
 }

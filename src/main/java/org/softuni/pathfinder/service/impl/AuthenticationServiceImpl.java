@@ -5,14 +5,14 @@ import org.softuni.pathfinder.model.dto.UserLoginDTO;
 import org.softuni.pathfinder.model.dto.UserRegisterDTO;
 import org.softuni.pathfinder.model.entity.User;
 import org.softuni.pathfinder.repository.UserRepository;
-import org.softuni.pathfinder.service.UserService;
+import org.softuni.pathfinder.service.AuthenticationService;
 import org.softuni.pathfinder.session.LoggedUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     private final LoggedUser loggedUser;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, LoggedUser loggedUser) {
+    public AuthenticationServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, LoggedUser loggedUser) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
@@ -29,7 +29,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(UserRegisterDTO userRegisterDTO) {
-        userRegisterDTO.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
         final User user = this.modelMapper.map(userRegisterDTO, User.class);
         this.userRepository.save(user);
     }
@@ -51,7 +50,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("User entered incorrect password");
         }
 
-        this.loggedUser.login(user.getUsername(), user.getEmail(), user.getFullName());
+        this.loggedUser.login(user.getUsername(), user.getEmail(), user.getFullName(), user.getRoles());
 
         return true;
     }
@@ -61,8 +60,5 @@ public class UserServiceImpl implements UserService {
         this.loggedUser.logout();
     }
 
-    @Override
-    public User getLoggedUser() {
-        return this.userRepository.findByUsername(loggedUser.getUsername());
-    }
+
 }

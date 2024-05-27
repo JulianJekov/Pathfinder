@@ -1,7 +1,7 @@
 package org.softuni.pathfinder.web;
 
 import org.softuni.pathfinder.model.dto.AddRouteDTO;
-import org.softuni.pathfinder.model.enums.CategoryType;
+import org.softuni.pathfinder.model.enums.CategoryNames;
 import org.softuni.pathfinder.model.enums.Level;
 import org.softuni.pathfinder.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class RoutesController {
     public ModelAndView addRoute() {
         ModelAndView modelAndView = new ModelAndView("add-route");
         modelAndView.addObject("levels", Level.values());
-        modelAndView.addObject("categories", CategoryType.values());
+        modelAndView.addObject("categories", CategoryNames.values());
         return modelAndView;
     }
 
