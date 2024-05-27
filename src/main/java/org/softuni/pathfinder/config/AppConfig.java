@@ -1,8 +1,9 @@
 package org.softuni.pathfinder.config;
 
 import org.modelmapper.*;
-import org.softuni.pathfinder.model.dto.AddRouteDTO;
-import org.softuni.pathfinder.model.dto.UserRegisterDTO;
+import org.softuni.pathfinder.exceptions.UserNotFoundException;
+import org.softuni.pathfinder.model.dto.rout.AddRouteDTO;
+import org.softuni.pathfinder.model.dto.user.UserRegisterDTO;
 import org.softuni.pathfinder.model.entity.Category;
 import org.softuni.pathfinder.model.entity.Route;
 import org.softuni.pathfinder.model.entity.User;
@@ -11,7 +12,6 @@ import org.softuni.pathfinder.model.enums.Level;
 import org.softuni.pathfinder.repository.UserRepository;
 import org.softuni.pathfinder.service.CategoryService;
 import org.softuni.pathfinder.service.RoleService;
-import org.softuni.pathfinder.service.AuthenticationService;
 import org.softuni.pathfinder.session.LoggedUser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -82,6 +82,8 @@ public class AppConfig {
 
 
     private User getLoggedUser() {
-        return this.userRepository.findByUsername(loggedUser.getUsername());
+        String username = loggedUser.getUsername();
+        return this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username: " + username + " was not found!"));
     }
 }

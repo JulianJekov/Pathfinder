@@ -1,4 +1,4 @@
-package org.softuni.pathfinder.model.dto;
+package org.softuni.pathfinder.model.dto.user;
 
 public class UserLoginDTO {
 

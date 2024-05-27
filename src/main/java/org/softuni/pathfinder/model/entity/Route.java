@@ -28,6 +28,9 @@ public class Route extends BaseEntity{
     @Column(name = "video_url")
     private String videoUrl;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @ManyToMany
     @JoinTable(name = "routes_categories", joinColumns =
     @JoinColumn(name = "route_id", referencedColumnName = "id"), inverseJoinColumns =
@@ -98,6 +101,15 @@ public class Route extends BaseEntity{
 
     public Route setCategories(Set<Category> categories) {
         this.categories = categories;
+        return this;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public Route setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
         return this;
     }
 }

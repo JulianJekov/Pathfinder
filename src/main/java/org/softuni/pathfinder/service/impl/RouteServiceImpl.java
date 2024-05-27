@@ -1,12 +1,16 @@
 package org.softuni.pathfinder.service.impl;
 
 import org.modelmapper.ModelMapper;
-import org.softuni.pathfinder.model.dto.AddRouteDTO;
+import org.softuni.pathfinder.model.dto.rout.AddRouteDTO;
+import org.softuni.pathfinder.model.dto.rout.RoutDetailsDTO;
+import org.softuni.pathfinder.model.dto.rout.RoutGetAllDTO;
 import org.softuni.pathfinder.model.entity.Route;
 import org.softuni.pathfinder.repository.RouteRepository;
 import org.softuni.pathfinder.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -25,5 +29,17 @@ public class RouteServiceImpl implements RouteService {
         final Route route = this.modelMapper.map(addRouteDTO, Route.class);
 
         this.routeRepository.save(route);
+    }
+
+    @Override
+    public List<RoutGetAllDTO> getAllRoutes() {
+        return this.routeRepository.findAll().stream()
+                .map(route -> this.modelMapper.map(route, RoutGetAllDTO.class))
+                .toList();
+    }
+
+    @Override
+    public RoutDetailsDTO findById(Long id) {
+        return this.modelMapper.map(this.routeRepository.findById(id), RoutDetailsDTO.class);
     }
 }

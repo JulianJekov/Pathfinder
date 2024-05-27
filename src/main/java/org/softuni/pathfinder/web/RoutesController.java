@@ -1,15 +1,20 @@
 package org.softuni.pathfinder.web;
 
-import org.softuni.pathfinder.model.dto.AddRouteDTO;
+import org.softuni.pathfinder.model.dto.rout.AddRouteDTO;
+import org.softuni.pathfinder.model.dto.rout.RoutDetailsDTO;
+import org.softuni.pathfinder.model.dto.rout.RoutGetAllDTO;
 import org.softuni.pathfinder.model.enums.CategoryNames;
 import org.softuni.pathfinder.model.enums.Level;
 import org.softuni.pathfinder.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/routes")
@@ -36,5 +41,21 @@ public class RoutesController {
         this.routeService.add(addRouteDTO);
 
         return new ModelAndView("redirect:/");
+    }
+
+    @GetMapping("all")
+    public ModelAndView allRoutes() {
+        ModelAndView modelAndView = new ModelAndView("routes");
+        List<RoutGetAllDTO> routes = this.routeService.getAllRoutes();
+        modelAndView.addObject("routes", routes);
+        return modelAndView;
+    }
+
+    @GetMapping("/details/{id}")
+    public ModelAndView learnMore(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView("route-details");
+        RoutDetailsDTO routDetails = this.routeService.findById(id);
+        modelAndView.addObject("details", routDetails);
+        return modelAndView;
     }
 }

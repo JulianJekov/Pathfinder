@@ -1,4 +1,4 @@
-package org.softuni.pathfinder.model.dto;
+package org.softuni.pathfinder.model.dto.rout;
 
 import org.softuni.pathfinder.model.entity.User;
 import org.softuni.pathfinder.model.enums.CategoryNames;

@@ -1,8 +1,9 @@
 package org.softuni.pathfinder.service.impl;
 
 import org.modelmapper.ModelMapper;
-import org.softuni.pathfinder.model.dto.UserLoginDTO;
-import org.softuni.pathfinder.model.dto.UserRegisterDTO;
+import org.softuni.pathfinder.exceptions.UserNotFoundException;
+import org.softuni.pathfinder.model.dto.user.UserLoginDTO;
+import org.softuni.pathfinder.model.dto.user.UserRegisterDTO;
 import org.softuni.pathfinder.model.entity.User;
 import org.softuni.pathfinder.repository.UserRepository;
 import org.softuni.pathfinder.service.AuthenticationService;
@@ -38,11 +39,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         final String username = userLoginDto.getUsername();
 
-        final User user = this.userRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new IllegalArgumentException("User with username: " + username + " is not present");
-        }
+        final User user = this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username: " + username + " was not found!"));
 
         final boolean passwordMatch = passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword());
 

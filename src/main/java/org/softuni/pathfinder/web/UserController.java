@@ -1,8 +1,10 @@
 package org.softuni.pathfinder.web;
 
-import org.softuni.pathfinder.model.dto.UserLoginDTO;
-import org.softuni.pathfinder.model.dto.UserRegisterDTO;
+import org.softuni.pathfinder.model.dto.user.UserLoginDTO;
+import org.softuni.pathfinder.model.dto.user.UserProfileDTO;
+import org.softuni.pathfinder.model.dto.user.UserRegisterDTO;
 import org.softuni.pathfinder.service.AuthenticationService;
+import org.softuni.pathfinder.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,13 +14,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/users")
-public class AuthenticationController {
+public class UserController {
 
     private final AuthenticationService authenticationService;
+    private final UserService userService;
 
     @Autowired
-    public AuthenticationController(AuthenticationService authenticationService) {
+    public UserController(AuthenticationService authenticationService, UserService userService) {
         this.authenticationService = authenticationService;
+        this.userService = userService;
     }
 
     @GetMapping("/register")
@@ -54,5 +58,13 @@ public class AuthenticationController {
     public ModelAndView logout() {
         this.authenticationService.logout();
         return new ModelAndView("redirect:/");
+    }
+
+    @GetMapping("/profile")
+    public ModelAndView profile() {
+        ModelAndView modelAndView = new ModelAndView("profile");
+        UserProfileDTO profile = this.userService.getUserProfile();
+        modelAndView.addObject("profile", profile);
+        return modelAndView;
     }
 }
