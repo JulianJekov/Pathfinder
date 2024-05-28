@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -28,6 +30,15 @@ public class RouteServiceImpl implements RouteService {
     public void add(AddRouteDTO addRouteDTO) {
         final Route route = this.modelMapper.map(addRouteDTO, Route.class);
 
+        String regex = "(?<=v=)[\\w-]{11}";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(addRouteDTO.getVideoUrl());
+
+        if (matcher.find()) {
+            String url = matcher.group(0);
+            route.setVideoUrl(url);
+        }
         this.routeRepository.save(route);
     }
 
@@ -39,7 +50,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public RoutDetailsDTO findById(Long id) {
+    public RoutDetailsDTO getDetails(Long id) {
         return this.modelMapper.map(this.routeRepository.findById(id), RoutDetailsDTO.class);
     }
 }

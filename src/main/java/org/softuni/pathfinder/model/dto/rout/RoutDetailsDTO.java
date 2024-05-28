@@ -4,7 +4,9 @@ import org.softuni.pathfinder.model.enums.Level;
 
 public class RoutDetailsDTO {
 
-    private String authorFullName;
+    private String name;
+
+    private String authorUsername;
 
     private Level level;
 
@@ -12,12 +14,27 @@ public class RoutDetailsDTO {
 
     private String videoUrl;
 
-    public String getAuthorFullName() {
-        return authorFullName;
+    //Todo: gpx coordinates
+    //Todo: video url
+    //Todo: choose picture
+    //Todo: total distance
+
+
+    public String getName() {
+        return name;
     }
 
-    public RoutDetailsDTO setAuthorFullName(String authorFullName) {
-        this.authorFullName = authorFullName;
+    public RoutDetailsDTO setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    public RoutDetailsDTO setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
         return this;
     }
 

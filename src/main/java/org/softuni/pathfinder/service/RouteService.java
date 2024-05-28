@@ -11,5 +11,5 @@ public interface RouteService {
 
     List<RoutGetAllDTO> getAllRoutes();
 
-    RoutDetailsDTO findById(Long id);
+    RoutDetailsDTO getDetails(Long id);
 }
