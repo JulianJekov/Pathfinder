@@ -13,6 +13,7 @@ import org.softuni.pathfinder.repository.UserRepository;
 import org.softuni.pathfinder.service.CategoryService;
 import org.softuni.pathfinder.service.RoleService;
 import org.softuni.pathfinder.session.LoggedUser;
+import org.softuni.pathfinder.util.YouTubeUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -38,10 +39,12 @@ public class AppConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
+
         TypeMap<AddRouteDTO, Route> typeMap =
                 modelMapper.createTypeMap(AddRouteDTO.class, Route.class);
 
         Provider<User> loggedUserProvider = request -> getLoggedUser();
+        Provider<String> youtubeUrlProvider = request -> YouTubeUtil.getVideoUrl((String) request.getSource());
 
         Converter<Set<CategoryNames>, Set<Category>> converter =
                 context -> context.getSource() == null
@@ -54,7 +57,10 @@ public class AppConfig {
                 .addMappings(mapping -> mapping
                         .when(Conditions.isNull())
                         .with(loggedUserProvider)
-                        .map(AddRouteDTO::getAuthor, Route::setAuthor));
+                        .map(AddRouteDTO::getAuthor, Route::setAuthor))
+                .addMappings(mapping -> mapping
+                        .with(youtubeUrlProvider)
+                        .map(AddRouteDTO::getVideoUrl, Route::setVideoUrl));
 
         Provider<User> newUserProvider = request -> new User()
                 .setRoles(Set.of(roleService.getRoleByName("USER")))

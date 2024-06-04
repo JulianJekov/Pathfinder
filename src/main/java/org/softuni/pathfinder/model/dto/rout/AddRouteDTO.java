@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import org.softuni.pathfinder.model.entity.User;
 import org.softuni.pathfinder.model.enums.CategoryNames;
 import org.softuni.pathfinder.model.enums.Level;
+import org.softuni.pathfinder.validations.annotations.FileAnnotation;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -19,6 +21,9 @@ public class AddRouteDTO {
     @Size(min = 5)
     @NotNull
     private String description;
+
+    @FileAnnotation(contentTypes = "text/xml")
+    private MultipartFile gpxCoordinates;
 
     @NotNull
     private Level level;
@@ -97,6 +102,15 @@ public class AddRouteDTO {
 
     public AddRouteDTO setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+        return this;
+    }
+
+    public MultipartFile getGpxCoordinates() {
+        return gpxCoordinates;
+    }
+
+    public AddRouteDTO setGpxCoordinates(MultipartFile gpxCoordinates) {
+        this.gpxCoordinates = gpxCoordinates;
         return this;
     }
 }
