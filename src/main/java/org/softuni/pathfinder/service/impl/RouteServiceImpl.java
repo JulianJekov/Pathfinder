@@ -1,22 +1,24 @@
 package org.softuni.pathfinder.service.impl;
 
 import org.modelmapper.ModelMapper;
-import org.softuni.pathfinder.model.dto.rout.AddRouteDTO;
-import org.softuni.pathfinder.model.dto.rout.RoutDetailsDTO;
-import org.softuni.pathfinder.model.dto.rout.RoutGetAllDTO;
+import org.softuni.pathfinder.model.dto.rout.*;
 import org.softuni.pathfinder.model.entity.Route;
+import org.softuni.pathfinder.model.enums.CategoryNames;
 import org.softuni.pathfinder.repository.RouteRepository;
 import org.softuni.pathfinder.service.RouteService;
 import org.softuni.pathfinder.session.LoggedUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -25,6 +27,7 @@ public class RouteServiceImpl implements RouteService {
     private final ModelMapper modelMapper;
     private final LoggedUser loggedUser;
     private static final String BASE_GPX_COORDINATES_PATH = "src\\main\\resources\\gpx\\";
+    private static final String BASE_ROUTE_PICTURES_PATH = "src\\main\\resources\\routes\\pictures\\";
 
     @Autowired
     public RouteServiceImpl(RouteRepository routeRepository, ModelMapper modelMapper, LoggedUser loggedUser) {
@@ -48,7 +51,6 @@ public class RouteServiceImpl implements RouteService {
     }
 
 
-
     @Override
     public List<RoutGetAllDTO> getAllRoutes() {
         return this.routeRepository.findAll().stream()
@@ -57,14 +59,54 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public RoutDetailsDTO getDetails(Long id) {
-        return this.modelMapper.map(this.routeRepository.findById(id), RoutDetailsDTO.class);
+    public RouteDetailsDTO getDetails(Long id) {
+        return this.modelMapper.map(this.routeRepository.findById(id), RouteDetailsDTO.class);
+    }
+
+    @Override
+    public void uploadPicture(UploadPictureRouteDTO uploadPictureRouteDTO) {
+        MultipartFile pictureFile = uploadPictureRouteDTO.getPicture();
+        String picturePath = getPicturePath(pictureFile);
+
+        try {
+            File file = new File(BASE_ROUTE_PICTURES_PATH + picturePath);
+            file.createNewFile();
+            OutputStream outputStream = new FileOutputStream(file);
+            outputStream.write(pictureFile.getBytes());
+
+            Optional<Route> optionalRoute = this.routeRepository.findById(uploadPictureRouteDTO.getId());
+
+            if (optionalRoute.isPresent()) {
+                Route route = optionalRoute.get();
+                route.setImageUrl(picturePath);
+                this.routeRepository.save(route);
+            }
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<RouteCategoryDTO> findAllByCategoryName(CategoryNames categoryNames) {
+        return this.routeRepository.findAllByCategories_Name(categoryNames)
+                .stream().map(route -> this.modelMapper.map(route, RouteCategoryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    private String getPicturePath(MultipartFile picture) {
+        String pictureType = picture.getOriginalFilename().split("\\.")[1];
+        String pathPattern = "%s\\%s.%s";
+        return String.format(pathPattern,
+                this.loggedUser.getUsername(),
+                UUID.randomUUID(),
+                pictureType);
     }
 
     private String getFilePath(String routName) {
         String pathPattern = "%s\\%s_%s.xml";
         return String.format(pathPattern,
-                loggedUser.getUsername(),
+                this.loggedUser.getUsername(),
                 routNameTransform(routName),
                 UUID.randomUUID());
     }

@@ -1,9 +1,6 @@
 package org.softuni.pathfinder.model.dto.rout;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.softuni.pathfinder.model.entity.User;
 import org.softuni.pathfinder.model.enums.CategoryNames;
 import org.softuni.pathfinder.model.enums.Level;
@@ -28,7 +25,8 @@ public class AddRouteDTO {
     @NotNull
     private Level level;
 
-    @NotBlank
+    @NotBlank(message = "")
+    @Pattern(regexp = "^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$", message = "Invalid youtube url!")
     private String videoUrl;
 
     @NotBlank

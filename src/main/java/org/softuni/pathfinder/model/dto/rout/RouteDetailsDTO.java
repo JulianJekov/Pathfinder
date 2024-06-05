@@ -2,7 +2,9 @@ package org.softuni.pathfinder.model.dto.rout;
 
 import org.softuni.pathfinder.model.enums.Level;
 
-public class RoutDetailsDTO {
+public class RouteDetailsDTO {
+
+    private Long id;
 
     private String name;
 
@@ -24,7 +26,7 @@ public class RoutDetailsDTO {
         return name;
     }
 
-    public RoutDetailsDTO setName(String name) {
+    public RouteDetailsDTO setName(String name) {
         this.name = name;
         return this;
     }
@@ -33,7 +35,7 @@ public class RoutDetailsDTO {
         return authorUsername;
     }
 
-    public RoutDetailsDTO setAuthorUsername(String authorUsername) {
+    public RouteDetailsDTO setAuthorUsername(String authorUsername) {
         this.authorUsername = authorUsername;
         return this;
     }
@@ -42,7 +44,7 @@ public class RoutDetailsDTO {
         return level;
     }
 
-    public RoutDetailsDTO setLevel(Level level) {
+    public RouteDetailsDTO setLevel(Level level) {
         this.level = level;
         return this;
     }
@@ -51,7 +53,7 @@ public class RoutDetailsDTO {
         return description;
     }
 
-    public RoutDetailsDTO setDescription(String description) {
+    public RouteDetailsDTO setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -60,8 +62,17 @@ public class RoutDetailsDTO {
         return videoUrl;
     }
 
-    public RoutDetailsDTO setVideoUrl(String videoUrl) {
+    public RouteDetailsDTO setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+        return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public RouteDetailsDTO setId(Long id) {
+        this.id = id;
         return this;
     }
 }

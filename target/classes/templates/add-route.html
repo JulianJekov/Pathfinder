@@ -112,7 +112,8 @@
                        th:errorclass="'is-invalid alert-danger'"
                        type="text"
                        class="form-control" placeholder="Video url">
-                <small class="invalid-feedback rounded">Video url must not be empty!</small>
+                <small th:if="${#fields.hasErrors('videoUrl')}" class="invalid-feedback text-danger rounded"
+                th:errors="*{videoUrl}"></small>
             </div>
         </div>
 

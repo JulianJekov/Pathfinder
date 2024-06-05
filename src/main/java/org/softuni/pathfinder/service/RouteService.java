@@ -1,8 +1,7 @@
 package org.softuni.pathfinder.service;
 
-import org.softuni.pathfinder.model.dto.rout.AddRouteDTO;
-import org.softuni.pathfinder.model.dto.rout.RoutDetailsDTO;
-import org.softuni.pathfinder.model.dto.rout.RoutGetAllDTO;
+import org.softuni.pathfinder.model.dto.rout.*;
+import org.softuni.pathfinder.model.enums.CategoryNames;
 
 import java.util.List;
 
@@ -11,5 +10,9 @@ public interface RouteService {
 
     List<RoutGetAllDTO> getAllRoutes();
 
-    RoutDetailsDTO getDetails(Long id);
+    RouteDetailsDTO getDetails(Long id);
+
+    void uploadPicture(UploadPictureRouteDTO uploadPictureRouteDTO);
+
+    List<RouteCategoryDTO> findAllByCategoryName(CategoryNames categoryNames);
 }

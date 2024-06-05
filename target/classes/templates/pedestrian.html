@@ -23,11 +23,11 @@
 
     <div th:replace="~{fragments/navigation}"></div>
 
-    <section class="road">
+    <section th:each="r : ${routes}" class="road">
         <div>
-            <h2>Title</h2>
-            <p>Very long description</p>
-            <a href="/" class="btn">Learn More</a>
+            <h2 th:text="${r.name}" >Title</h2>
+            <p th:text="${r.description}">Very long description</p>
+            <a th:href="@{/routes/details/{id} (id=${r.id})}" class="btn">Learn More</a>
         </div>
         <img class="rounded-circle w-75 ml-5" src="/images/pic1.jpg" alt="Title image">
     </section>

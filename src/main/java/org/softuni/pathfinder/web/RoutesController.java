@@ -1,9 +1,7 @@
 package org.softuni.pathfinder.web;
 
 import jakarta.validation.Valid;
-import org.softuni.pathfinder.model.dto.rout.AddRouteDTO;
-import org.softuni.pathfinder.model.dto.rout.RoutDetailsDTO;
-import org.softuni.pathfinder.model.dto.rout.RoutGetAllDTO;
+import org.softuni.pathfinder.model.dto.rout.*;
 import org.softuni.pathfinder.model.enums.CategoryNames;
 import org.softuni.pathfinder.model.enums.Level;
 import org.softuni.pathfinder.service.RouteService;
@@ -41,6 +39,10 @@ public class RoutesController {
     public AddRouteDTO addRouteDTO() {
         return new AddRouteDTO();
     }
+    @ModelAttribute("routeDetails")
+    public RouteDetailsDTO routDetailsDTO() {
+        return new RouteDetailsDTO();
+    }
 
 
     @GetMapping("/add")
@@ -75,8 +77,26 @@ public class RoutesController {
     @GetMapping("/details/{id}")
     public ModelAndView learnMore(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("route-details");
-        RoutDetailsDTO routDetails = this.routeService.getDetails(id);
-        modelAndView.addObject("details", routDetails);
+        RouteDetailsDTO routeDetailsDTO = this.routeService.getDetails(id);
+        modelAndView.addObject("routeDetails", routeDetailsDTO);
+        return modelAndView;
+    }
+
+    @PostMapping("/upload-picture")
+    public ModelAndView uploadPicture(@Valid UploadPictureRouteDTO uploadPictureRouteDTO) {
+        routeService.uploadPicture(uploadPictureRouteDTO);
+        return new ModelAndView("redirect:/routes");
+    }
+
+
+    @GetMapping("/{categoryName}")
+    public ModelAndView getAllByCategory(@PathVariable("categoryName") CategoryNames categoryName){
+
+        List<RouteCategoryDTO> routesByCategory =
+                routeService.findAllByCategoryName(categoryName);
+        ModelAndView modelAndView = new ModelAndView(categoryName.name().toLowerCase());
+        modelAndView.addObject("routes", routesByCategory);
+
         return modelAndView;
     }
 }
