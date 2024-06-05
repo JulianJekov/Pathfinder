@@ -252,7 +252,7 @@ footer {
     grid-template-columns: repeat(3, 1fr);
 }
 
-.route-info, .route-description, .comments {
+.route-info, .route-description, .comments, .all-comments{
     background-color: var(--lightGray);
     padding: 20px;
     border-radius: 10px;
@@ -268,10 +268,14 @@ footer {
     grid-row: 2;
 }
 
-.comments {
+.comments{
+    grid-column: 1/6;
+    grid-row: 6;
+}
+
+.all-comments{
     grid-column: 1/4;
     grid-row: 4;
-
 }
 
 #add-route-form {

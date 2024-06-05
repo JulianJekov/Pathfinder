@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.softuni.pathfinder.model.enums.Level;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,6 +37,9 @@ public class Route extends BaseEntity{
     @JoinColumn(name = "route_id", referencedColumnName = "id"), inverseJoinColumns =
     @JoinColumn(name = "categories_id", referencedColumnName = "id"))
     private Set<Category> categories;
+
+    @OneToMany(mappedBy = "route", fetch = FetchType.EAGER)
+    private List<Comment> comments;
 
     public Route() {
         this.categories = new HashSet<>();
@@ -110,6 +114,15 @@ public class Route extends BaseEntity{
 
     public Route setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+        return this;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public Route setComments(List<Comment> comments) {
+        this.comments = comments;
         return this;
     }
 }

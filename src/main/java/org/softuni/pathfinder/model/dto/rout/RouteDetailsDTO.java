@@ -1,6 +1,9 @@
 package org.softuni.pathfinder.model.dto.rout;
 
+import org.softuni.pathfinder.model.dto.comments.CommentViewDTO;
 import org.softuni.pathfinder.model.enums.Level;
+
+import java.util.List;
 
 public class RouteDetailsDTO {
 
@@ -15,6 +18,8 @@ public class RouteDetailsDTO {
     private String description;
 
     private String videoUrl;
+
+    private List<CommentViewDTO> comments;
 
     //Todo: gpx coordinates
     //Todo: video url
@@ -73,6 +78,15 @@ public class RouteDetailsDTO {
 
     public RouteDetailsDTO setId(Long id) {
         this.id = id;
+        return this;
+    }
+
+    public List<CommentViewDTO> getComments() {
+        return comments;
+    }
+
+    public RouteDetailsDTO setComments(List<CommentViewDTO> comments) {
+        this.comments = comments;
         return this;
     }
 }
