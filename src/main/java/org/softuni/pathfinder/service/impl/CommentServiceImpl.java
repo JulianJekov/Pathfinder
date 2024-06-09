@@ -36,6 +36,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void createComment(CreateCommentDTO createCommentDTO) {
+        //TODO: fix saving comments with new id not replace other comment id
         Optional<Route> optionalRoute =
                 this.routeRepository.findById(createCommentDTO.getRouteId());
 
