@@ -36,7 +36,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void createComment(CreateCommentDTO createCommentDTO) {
-        //TODO: fix saving comments with new id not replace other comment id
         Optional<Route> optionalRoute =
                 this.routeRepository.findById(createCommentDTO.getRouteId());
 
@@ -58,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = modelMapper.map(createCommentDTO, Comment.class);
         comment.setRoute(route);
         comment.setAuthor(user);
-        comment.setCreated(LocalDateTime.now());
+//        comment.setCreated(LocalDateTime.now());
         comment.setApproved(true);
 
 

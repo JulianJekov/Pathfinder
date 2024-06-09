@@ -38,3 +38,7 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+
+pathfinder:
+  gpx-coordinates:
+    migrate: false

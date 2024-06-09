@@ -39,10 +39,14 @@ public class RoutesController {
     public AddRouteDTO addRouteDTO() {
         return new AddRouteDTO();
     }
+
     @ModelAttribute("routeDetails")
     public RouteDetailsDTO routDetailsDTO() {
         return new RouteDetailsDTO();
     }
+
+    @ModelAttribute("uploadPicture")
+    public UploadPictureRouteDTO uploadPictureRouteDTO() {return new UploadPictureRouteDTO();}
 
 
     @GetMapping("/add")
@@ -85,7 +89,7 @@ public class RoutesController {
     @PostMapping("/upload-picture")
     public ModelAndView uploadPicture(@Valid UploadPictureRouteDTO uploadPictureRouteDTO) {
         routeService.uploadPicture(uploadPictureRouteDTO);
-        return new ModelAndView("redirect:/routes");
+        return new ModelAndView("redirect:/routes/all");
     }
 
 

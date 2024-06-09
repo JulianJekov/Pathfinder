@@ -9,6 +9,8 @@ public class UploadPictureRouteDTO {
     @FileAnnotation(contentTypes = {"image/png", "image/jpeg"})
     private MultipartFile picture;
 
+    private Boolean isPrimary;
+
     public UploadPictureRouteDTO() {
     }
 
@@ -28,5 +30,13 @@ public class UploadPictureRouteDTO {
     public UploadPictureRouteDTO setPicture(MultipartFile picture) {
         this.picture = picture;
         return this;
+    }
+
+    public Boolean getPrimary() {
+        return isPrimary;
+    }
+
+    public void setPrimary(Boolean primary) {
+        isPrimary = primary;
     }
 }

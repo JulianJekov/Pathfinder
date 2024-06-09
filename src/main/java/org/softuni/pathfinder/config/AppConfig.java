@@ -2,9 +2,11 @@ package org.softuni.pathfinder.config;
 
 import org.modelmapper.*;
 import org.softuni.pathfinder.exceptions.UserNotFoundException;
+import org.softuni.pathfinder.model.dto.comments.CreateCommentDTO;
 import org.softuni.pathfinder.model.dto.rout.AddRouteDTO;
 import org.softuni.pathfinder.model.dto.user.UserRegisterDTO;
 import org.softuni.pathfinder.model.entity.Category;
+import org.softuni.pathfinder.model.entity.Comment;
 import org.softuni.pathfinder.model.entity.Route;
 import org.softuni.pathfinder.model.entity.User;
 import org.softuni.pathfinder.model.enums.CategoryNames;
@@ -19,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Configuration
@@ -45,6 +48,7 @@ public class AppConfig {
 
         Provider<User> loggedUserProvider = request -> getLoggedUser();
         Provider<String> youtubeUrlProvider = request -> YouTubeUtil.getVideoUrl((String) request.getSource());
+        Provider<LocalDateTime> localDateTimeNow = request -> LocalDateTime.now();
 
         Converter<Set<CategoryNames>, Set<Category>> converter =
                 context -> context.getSource() == null

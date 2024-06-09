@@ -41,6 +41,9 @@ public class Route extends BaseEntity{
     @OneToMany(mappedBy = "route", fetch = FetchType.EAGER)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "route" , fetch = FetchType.EAGER)
+    private List<Picture> pictures;
+
     public Route() {
         this.categories = new HashSet<>();
     }
@@ -124,5 +127,13 @@ public class Route extends BaseEntity{
     public Route setComments(List<Comment> comments) {
         this.comments = comments;
         return this;
+    }
+
+    public List<Picture> getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(List<Picture> pictures) {
+        this.pictures = pictures;
     }
 }
