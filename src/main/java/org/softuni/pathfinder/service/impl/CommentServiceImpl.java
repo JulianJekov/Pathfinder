@@ -1,6 +1,7 @@
 package org.softuni.pathfinder.service.impl;
 
 import org.modelmapper.ModelMapper;
+import org.softuni.pathfinder.exceptions.CommentNotFoundException;
 import org.softuni.pathfinder.exceptions.RouteNotFoundException;
 import org.softuni.pathfinder.exceptions.UserNotFoundException;
 import org.softuni.pathfinder.model.dto.comments.CreateCommentDTO;
@@ -36,31 +37,30 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void createComment(CreateCommentDTO createCommentDTO) {
-        Optional<Route> optionalRoute =
-                this.routeRepository.findById(createCommentDTO.getRouteId());
+        Route route = this.routeRepository.findById(createCommentDTO.getRouteId()).orElseThrow(
+                        () -> new RouteNotFoundException("Route not found!"));
 
-        if (optionalRoute.isEmpty()) {
-            throw new RouteNotFoundException("Route not found!");
-        }
-
-        Route route = optionalRoute.get();
-
-        Optional<User> optionalUser =
-                this.userRepository.findByUsername(this.loggedUser.getUsername());
-
-        if(optionalUser.isEmpty()) {
-            throw new UserNotFoundException("User not found!");
-        }
-
-        User user = optionalUser.get();
+        User user = this.userRepository.findByUsername(this.loggedUser.getUsername()).orElseThrow(
+                        () -> new UserNotFoundException("User not found!"));
 
         Comment comment = modelMapper.map(createCommentDTO, Comment.class);
         comment.setRoute(route);
         comment.setAuthor(user);
-//        comment.setCreated(LocalDateTime.now());
-        comment.setApproved(true);
-
 
         this.commentRepository.save(comment);
+    }
+
+    @Override
+    public void approve(Long id) {
+        Comment comment = this.commentRepository.findById(id).orElseThrow(
+                () -> new CommentNotFoundException("Comment not found!"));
+
+        comment.setApproved(true);
+        this.commentRepository.save(comment);
+    }
+
+    @Override
+    public void delete(Long id) {
+        this.commentRepository.deleteById(id);
     }
 }

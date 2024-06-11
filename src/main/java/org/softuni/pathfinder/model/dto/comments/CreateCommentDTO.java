@@ -12,6 +12,8 @@ public class CreateCommentDTO {
 
     private LocalDateTime created = LocalDateTime.now();
 
+    private Boolean approved = false;
+
     public CreateCommentDTO() {
     }
 
@@ -47,5 +49,13 @@ public class CreateCommentDTO {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public Boolean getApproved() {
+        return approved;
+    }
+
+    public void setApproved(Boolean approved) {
+        this.approved = approved;
     }
 }

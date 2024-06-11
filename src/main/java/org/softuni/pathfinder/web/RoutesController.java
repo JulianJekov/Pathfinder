@@ -46,7 +46,9 @@ public class RoutesController {
     }
 
     @ModelAttribute("uploadPicture")
-    public UploadPictureRouteDTO uploadPictureRouteDTO() {return new UploadPictureRouteDTO();}
+    public UploadPictureRouteDTO uploadPictureRouteDTO() {
+        return new UploadPictureRouteDTO();
+    }
 
 
     @GetMapping("/add")
@@ -62,7 +64,7 @@ public class RoutesController {
             redirectAttributes.addFlashAttribute("addRouteDTO", addRouteDTO);
             redirectAttributes.addFlashAttribute
                     ("org.springframework.validation.BindingResult.addRouteDTO", bindingResult);
-        return new ModelAndView("redirect:/routes/add");
+            return new ModelAndView("redirect:/routes/add");
         }
 
         this.routeService.add(addRouteDTO);
@@ -94,7 +96,7 @@ public class RoutesController {
 
 
     @GetMapping("/{categoryName}")
-    public ModelAndView getAllByCategory(@PathVariable("categoryName") CategoryNames categoryName){
+    public ModelAndView getAllByCategory(@PathVariable("categoryName") CategoryNames categoryName) {
 
         List<RouteCategoryDTO> routesByCategory =
                 routeService.findAllByCategoryName(categoryName);

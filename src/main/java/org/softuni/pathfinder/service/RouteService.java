@@ -15,4 +15,6 @@ public interface RouteService {
     void uploadPicture(UploadPictureRouteDTO uploadPictureRouteDTO);
 
     List<RouteCategoryDTO> findAllByCategoryName(CategoryNames categoryNames);
+
+    List<List<Double>> getCoordinates(Long routeId);
 }

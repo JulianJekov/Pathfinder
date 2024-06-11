@@ -1,5 +1,6 @@
 package org.softuni.pathfinder.service.impl;
 
+import io.jenetics.jpx.GPX;
 import org.modelmapper.ModelMapper;
 import org.softuni.pathfinder.exceptions.RouteNotFoundException;
 import org.softuni.pathfinder.exceptions.UserNotFoundException;
@@ -20,6 +21,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -123,6 +126,27 @@ public class RouteServiceImpl implements RouteService {
         return this.routeRepository.findAllByCategories_Name(categoryNames)
                 .stream().map(route -> this.modelMapper.map(route, RouteCategoryDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<List<Double>> getCoordinates(Long routeId) {
+        Route route = this.routeRepository.findById(routeId)
+                .orElseThrow(() -> new RouteNotFoundException("Route not found"));
+
+        try {
+            GPX gpx = GPX.read(Path.of(BASE_GPX_COORDINATES_PATH + route.getGpxCoordinates()));
+
+            return gpx.getTracks().get(0).getSegments().get(0).getPoints().stream()
+                    .map(point -> {
+                        List<Double> coordinates = new ArrayList<>();
+                        coordinates.add(point.getLongitude().doubleValue());
+                        coordinates.add(point.getLatitude().doubleValue());
+                        return coordinates;
+                    }).toList();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     private String getPicturePath(MultipartFile picture, String routName, boolean isPrimary) {

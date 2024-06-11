@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
           integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
           crossorigin=""/>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
             integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
             crossorigin=""></script>
@@ -44,7 +46,7 @@
             <div>
                 <h4>Choose picture</h4>
                 <form th:action="@{/routes/upload-picture}" th:method="POST" enctype="multipart/form-data">
-                    <input  type="hidden" id="id" name="id" th:value="${routeDetails.id}">
+                    <input type="hidden" id="id" name="id" th:value="${routeDetails.id}">
                     <div class="form-group">
                         <label>
                             <input type="text" name="title">
@@ -73,7 +75,9 @@
                 </form>
             </div>
         </section>
-        <section id="map"></section>
+        <section id="map">
+
+        </section>
         <section id="video">
             <iframe id="frame" th:src="@{https://www.youtube.com/embed/{url} (url=${routeDetails.videoUrl})}">
             </iframe>
@@ -87,7 +91,8 @@
             <img class="rounded" src="/images/pic1.jpg" height="100%" alt="">
         </section>
         <section th:unless="${routeDetails.pictures.isEmpty()}" class="gallery">
-            <img th:each="picture : ${routeDetails.pictures}" class="rounded" th:src="${picture.url}" height="100%" alt="">
+            <img th:each="picture : ${routeDetails.pictures}" class="rounded" th:src="${picture.url}" height="100%"
+                 alt="">
         </section>
 
 
@@ -96,16 +101,26 @@
             <div th:each="comment : ${routeDetails.comments}" class="form-group">
                 <h4 th:text="${comment.content}">Leave a comment</h4>
                 <label th:text="${comment.authorUsername}" for="message">Message</label>
+                <div class="row">
+                    <form th:unless="${comment.approved}" th:method="PATCH"
+                          th:action="@{/comments/route/{routeId}/approve/{id}(routeId=${routeDetails.id}, id=${comment.id})}">
+                        <button class="btn btn-success mr-2" type="submit" th:text="Approve"></button>
+                    </form>
+                    <form th:method="DELETE"
+                          th:action="@{/comments/route/{routeId}/{id}(routeId=${routeDetails.id}, id=${comment.id})}">
+                        <button class="btn btn-danger" type="submit" th:text="Delete"></button>
+                    </form>
+                </div>
             </div>
+
         </section>
 
         <section class="comments">
-
             <div>
                 <!-- Comments submission -->
                 <form id="commentForm" th:method="POST"
                       th:action="@{/comments/create}">
-                    <input  type="hidden" name="routeId" th:value="${routeDetails.id}">
+                    <input type="hidden" name="routeId" th:value="${routeDetails.id}">
                     <div class="form-group">
                         <h4>Leave a comment</h4>
                         <label for="message">Message</label>
@@ -139,11 +154,75 @@
         </section>
         <p style="visibility: hidden">GPX Download: <a id="gpxDownload"></a></p>
     </div>
-	<!-- Scripts: track and comments 
+    <!-- Scripts: track and comments
     <script th:src="@{/js/track.js}"></script>
     <script th:src="@{/js/comments.js}"></script>
-	-->
+    -->
 </div>
 <div th:replace="~{fragments/footer}"></div>
+
+<script>
+    let coordinates;
+    const routeId = document.getElementById('routeId').value
+    let midCoordinates;
+
+    fetch(`http://localhost:8080/routes/coordinates/${routeId}`)
+        .then(res => res.json())
+        .then(res => {
+            console.log(res);
+            coordinates = res;
+
+            const xCoordinates = coordinates.map(xAndY => xAndY[0]);
+            const minX = Math.min(...xCoordinates);
+            const maxX = Math.max(...xCoordinates);
+
+            const yCoordinates = coordinates.map(xAndY => xAndY[1]);
+            const minY = Math.min(...yCoordinates);
+            const maxY = Math.max(...yCoordinates);
+
+            const middleX = (minX + maxX) / 2;
+            const middleY = (minY + maxY) / 2;
+
+            midCoordinates = [middleX, middleY];
+            console.log(midCoordinates);
+
+            mapboxgl.accessToken = 'token here';
+            const map = new mapboxgl.Map({
+                container: 'map',
+                // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: midCoordinates,
+                zoom: 11
+            });
+
+            map.on('load', () => {
+                map.addSource('route', {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'Feature',
+                        'properties': {},
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': coordinates
+                        }
+                    }
+                });
+                map.addLayer({
+                    'id': 'route',
+                    'type': 'line',
+                    'source': 'route',
+                    'layout': {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    'paint': {
+                        'line-color': '#888',
+                        'line-width': 8
+                    }
+                });
+            });
+        })
+</script>
+
 </body>
 </html>

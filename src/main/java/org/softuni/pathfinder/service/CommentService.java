@@ -5,4 +5,8 @@ import org.softuni.pathfinder.model.dto.comments.CreateCommentDTO;
 public interface CommentService {
 
     void createComment(CreateCommentDTO createCommentDTO);
+
+    void approve(Long id);
+
+    void delete(Long id);
 }
