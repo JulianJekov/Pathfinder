@@ -17,4 +17,6 @@ public interface RouteService {
     List<RouteCategoryDTO> findAllByCategoryName(CategoryNames categoryNames);
 
     List<List<Double>> getCoordinates(Long routeId);
+
+    MostCommentedRouteDTO getMostCommentedRoute();
 }

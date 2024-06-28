@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/3258e3d0-3f18-489e-81f9-bd7fe4f39763/console.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/softuni/pathfinder/repository/CommentRepository.java" dialect="GenericSQL" />
+  </component>
+</project>
