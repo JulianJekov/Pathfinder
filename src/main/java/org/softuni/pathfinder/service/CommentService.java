@@ -6,6 +6,8 @@ public interface CommentService {
 
     void createComment(CreateCommentDTO createCommentDTO);
 
+    CommentViewDTO createRestComment(CreateCommentDTO createCommentDTO);
+
     void approve(Long id);
 
     void delete(Long id);

@@ -20,12 +20,12 @@
             crossorigin=""></script>
 </head>
 <body>
-<div class="wrapper">
+<div class="wrapper" th:object="${routeDetails}">
 
     <div th:replace="~{fragments/navigation}"></div>
 
-    <input type="hidden" name="routeId" id="routeId">
-    <div class="details-main" th:object="${routeDetails}">
+    <input type="hidden" name="routeId" id="routeId" th:value="${routeDetails.id}">
+    <div class="details-main" >
         <section class="route-info text-center">
             <h4 th:text="*{name}" id="track-name"></h4>
             <p>Total distance: <span id="totalDistance"></span> km</p>
@@ -118,8 +118,8 @@
         <section class="comments">
             <div>
                 <!-- Comments submission -->
-                <form id="commentForm" th:method="POST"
-                      th:action="@{/comments/create}">
+<!--                <form id="commentForm" th:method="POST"-->
+<!--                      th:action="@{/comments/create}">-->
                     <input type="hidden" name="routeId" th:value="${routeDetails.id}">
                     <div class="form-group">
                         <h4>Leave a comment</h4>
@@ -141,7 +141,7 @@
                                id="postComment"
                                value="Post Comment"/>
                     </div>
-                </form>
+<!--                </form>-->
                 <!-- Comments submission -->
             </div>
 
@@ -224,5 +224,6 @@
         })
 </script>
 
+<script src="/js/comments.js"></script>
 </body>
 </html>

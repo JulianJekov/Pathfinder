@@ -3,7 +3,12 @@ package org.softuni.pathfinder.service.impl;
 import org.modelmapper.ModelMapper;
 import org.softuni.pathfinder.exceptions.CommentNotFoundException;
 import org.softuni.pathfinder.exceptions.RouteNotFoundException;
+<<<<<<< Updated upstream
 import org.softuni.pathfinder.exceptions.UserNotFoundException;
+=======
+import org.softuni.pathfinder.helpers.LoggedUserHelperService;
+import org.softuni.pathfinder.model.dto.comments.CommentViewDTO;
+>>>>>>> Stashed changes
 import org.softuni.pathfinder.model.dto.comments.CreateCommentDTO;
 import org.softuni.pathfinder.model.entity.Comment;
 import org.softuni.pathfinder.model.entity.Route;
@@ -48,6 +53,20 @@ public class CommentServiceImpl implements CommentService {
         comment.setAuthor(user);
 
         this.commentRepository.save(comment);
+    }
+
+    @Override
+    public CommentViewDTO createRestComment(CreateCommentDTO createCommentDTO) {
+        Route route = this.routeRepository.findById(createCommentDTO.getRouteId()).orElseThrow(
+                () -> new RouteNotFoundException("Route not found!"));
+
+        User user = loggedUserHelperService.getCurrentUser();
+
+        Comment comment = modelMapper.map(createCommentDTO, Comment.class);
+        comment.setRoute(route);
+        comment.setAuthor(user);
+
+       return modelMapper.map(this.commentRepository.save(comment) ,CommentViewDTO.class);
     }
 
     @Override
