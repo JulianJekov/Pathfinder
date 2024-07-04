@@ -4,15 +4,17 @@ import io.jenetics.jpx.GPX;
 import org.modelmapper.ModelMapper;
 import org.softuni.pathfinder.exceptions.RouteNotFoundException;
 import org.softuni.pathfinder.exceptions.UserNotFoundException;
+import org.softuni.pathfinder.helpers.LoggedUserHelperService;
 import org.softuni.pathfinder.model.dto.rout.*;
 import org.softuni.pathfinder.model.entity.Picture;
 import org.softuni.pathfinder.model.entity.Route;
 import org.softuni.pathfinder.model.enums.CategoryNames;
+import org.softuni.pathfinder.repository.CommentRepository;
 import org.softuni.pathfinder.repository.PictureRepository;
 import org.softuni.pathfinder.repository.RouteRepository;
 import org.softuni.pathfinder.repository.UserRepository;
 import org.softuni.pathfinder.service.RouteService;
-import org.softuni.pathfinder.session.LoggedUser;
+import org.softuni.pathfinder.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +26,6 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -33,9 +34,9 @@ public class RouteServiceImpl implements RouteService {
 
     private final RouteRepository routeRepository;
     private final ModelMapper modelMapper;
-    private final LoggedUser loggedUser;
-    private final UserRepository userRepository;
+    private final LoggedUserHelperService loggedUserHelperService;
     private final PictureRepository pictureRepository;
+    private final CommentRepository commentRepository;
 
     private static final String BASE_GPX_COORDINATES_PATH = "src\\main\\resources\\gpx\\";
     private static final String BASE_ROUTE_PICTURES_PATH = "src\\main\\resources\\static\\images\\";
@@ -43,12 +44,15 @@ public class RouteServiceImpl implements RouteService {
     private static final String GALLERY = "gallery";
 
     @Autowired
-    public RouteServiceImpl(RouteRepository routeRepository, ModelMapper modelMapper, LoggedUser loggedUser, UserRepository userRepository, PictureRepository pictureRepository) {
+    public RouteServiceImpl(RouteRepository routeRepository,
+                            ModelMapper modelMapper, LoggedUserHelperService loggedUserHelperService,
+                            PictureRepository pictureRepository,
+                            CommentRepository commentRepository) {
         this.routeRepository = routeRepository;
         this.modelMapper = modelMapper;
-        this.loggedUser = loggedUser;
-        this.userRepository = userRepository;
+        this.loggedUserHelperService = loggedUserHelperService;
         this.pictureRepository = pictureRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -108,8 +112,7 @@ public class RouteServiceImpl implements RouteService {
                 Picture picture = new Picture();
                 picture.setRoute(route);
                 picture.setUrl(IMAGE_PRE_PATH_FOR_THYMELEAF + picturePath);
-                picture.setAuthor(this.userRepository.findByUsername(this.loggedUser.getUsername())
-                        .orElseThrow(() -> new UserNotFoundException("User not found!")));
+                picture.setAuthor(this.loggedUserHelperService.getCurrentUser());
                 picture.setTitle(route.getName());
                 this.pictureRepository.save(picture);
                 route.getPictures().add(picture);
@@ -149,6 +152,18 @@ public class RouteServiceImpl implements RouteService {
         }
     }
 
+    @Override
+    public MostCommentedRouteDTO getMostCommentedRoute() {
+        Long mostCommentedRoutId = this.commentRepository.getMostCommentedRoutId();
+
+        if (mostCommentedRoutId != null && mostCommentedRoutId != 0) {
+            return routeRepository.findById(mostCommentedRoutId)
+                    .map(route -> modelMapper.map(route, MostCommentedRouteDTO.class))
+                    .orElse(null);
+        }
+        return null;
+    }
+
     private String getPicturePath(MultipartFile picture, String routName, boolean isPrimary) {
         String pictureType = picture.getOriginalFilename().split("\\.")[1];
 
@@ -165,7 +180,7 @@ public class RouteServiceImpl implements RouteService {
     private String getFilePath(String routName) {
         String pathPattern = "%s\\%s_%s.xml";
         return String.format(pathPattern,
-                this.loggedUser.getUsername(),
+                loggedUserHelperService.getCurrentUser().getUsername(),
                 routNameTransform(routName),
                 UUID.randomUUID());
     }

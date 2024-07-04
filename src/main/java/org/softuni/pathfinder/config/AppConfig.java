@@ -2,11 +2,10 @@ package org.softuni.pathfinder.config;
 
 import org.modelmapper.*;
 import org.softuni.pathfinder.exceptions.UserNotFoundException;
-import org.softuni.pathfinder.model.dto.comments.CreateCommentDTO;
+import org.softuni.pathfinder.helpers.LoggedUserHelperService;
 import org.softuni.pathfinder.model.dto.rout.AddRouteDTO;
 import org.softuni.pathfinder.model.dto.user.UserRegisterDTO;
 import org.softuni.pathfinder.model.entity.Category;
-import org.softuni.pathfinder.model.entity.Comment;
 import org.softuni.pathfinder.model.entity.Route;
 import org.softuni.pathfinder.model.entity.User;
 import org.softuni.pathfinder.model.enums.CategoryNames;
@@ -14,7 +13,6 @@ import org.softuni.pathfinder.model.enums.Level;
 import org.softuni.pathfinder.repository.UserRepository;
 import org.softuni.pathfinder.service.CategoryService;
 import org.softuni.pathfinder.service.RoleService;
-import org.softuni.pathfinder.session.LoggedUser;
 import org.softuni.pathfinder.util.YouTubeUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,15 +26,15 @@ import java.util.Set;
 public class AppConfig {
 
     private final CategoryService categoryService;
-    private final UserRepository userRepository;
     private final RoleService roleService;
-    private final LoggedUser loggedUser;
+    private final LoggedUserHelperService loggedUserHelperService;
 
-    public AppConfig(CategoryService categoryService, UserRepository userRepository, RoleService roleService, LoggedUser loggedUser) {
+    public AppConfig(CategoryService categoryService,
+                     RoleService roleService,
+                     LoggedUserHelperService loggedUserHelperService) {
         this.categoryService = categoryService;
-        this.userRepository = userRepository;
         this.roleService = roleService;
-        this.loggedUser = loggedUser;
+        this.loggedUserHelperService = loggedUserHelperService;
     }
 
     @Bean
@@ -46,7 +44,7 @@ public class AppConfig {
         TypeMap<AddRouteDTO, Route> typeMap =
                 modelMapper.createTypeMap(AddRouteDTO.class, Route.class);
 
-        Provider<User> loggedUserProvider = request -> getLoggedUser();
+        Provider<User> loggedUserProvider = request -> loggedUserHelperService.getCurrentUser();
         Provider<String> youtubeUrlProvider = request -> YouTubeUtil.getVideoUrl((String) request.getSource());
         Provider<LocalDateTime> localDateTimeNow = request -> LocalDateTime.now();
 
@@ -90,10 +88,4 @@ public class AppConfig {
         return new BCryptPasswordEncoder();
     }
 
-
-    private User getLoggedUser() {
-        String username = loggedUser.getUsername();
-        return this.userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User with username: " + username + " was not found!"));
-    }
 }

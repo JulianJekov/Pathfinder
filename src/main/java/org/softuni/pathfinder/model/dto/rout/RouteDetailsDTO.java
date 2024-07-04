@@ -24,11 +24,6 @@ public class RouteDetailsDTO {
 
     private List<PictureDTO> pictures;
 
-    //Todo: gpx coordinates
-    //Todo: video url
-    //Todo: choose picture
-    //Todo: total distance
-
 
     public String getName() {
         return name;

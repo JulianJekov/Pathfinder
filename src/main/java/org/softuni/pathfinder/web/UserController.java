@@ -1,6 +1,5 @@
 package org.softuni.pathfinder.web;
 
-import org.softuni.pathfinder.model.dto.user.UserLoginDTO;
 import org.softuni.pathfinder.model.dto.user.UserProfileDTO;
 import org.softuni.pathfinder.model.dto.user.UserRegisterDTO;
 import org.softuni.pathfinder.service.AuthenticationService;
@@ -41,24 +40,6 @@ public class UserController {
         return new ModelAndView("login");
     }
 
-    @PostMapping("/login")
-    public ModelAndView login(UserLoginDTO userLoginDto) {
-
-        final boolean isLogged = this.authenticationService.login(userLoginDto);
-
-        if (isLogged) {
-            return new ModelAndView("redirect:/");
-        }
-
-        return new ModelAndView("login");
-    }
-
-
-    @PostMapping("/logout")
-    public ModelAndView logout() {
-        this.authenticationService.logout();
-        return new ModelAndView("redirect:/");
-    }
 
     @GetMapping("/profile")
     public ModelAndView profile() {

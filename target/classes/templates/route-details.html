@@ -1,5 +1,6 @@
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8"/>
@@ -98,7 +99,9 @@
 
         <section class="all-comments">
             <h1>Comments</h1>
-            <div th:each="comment : ${routeDetails.comments}" class="form-group">
+<!--            sec:authorize="hasAnyRole('ADMIN', 'MODERATOR')"-->
+            <div th:if="${@loggedUserHelperService.isAdmin() or @loggedUserHelperService.isModerator()}"
+                 th:each="comment : ${routeDetails.comments}" class="form-group">
                 <h4 th:text="${comment.content}">Leave a comment</h4>
                 <label th:text="${comment.authorUsername}" for="message">Message</label>
                 <div class="row">
@@ -111,6 +114,12 @@
                         <button class="btn btn-danger" type="submit" th:text="Delete"></button>
                     </form>
                 </div>
+            </div>
+
+            <div th:if="${@loggedUserHelperService.isOnlyUser() and comment.approved}"
+                 th:each="comment : ${routeDetails.comments}" class="form-group">
+                <h4 th:text="${comment.content}">Leave a comment</h4>
+                <label th:text="${comment.authorUsername}" for="message">Message</label>
             </div>
 
         </section>

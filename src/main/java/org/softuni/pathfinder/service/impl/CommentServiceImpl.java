@@ -3,25 +3,19 @@ package org.softuni.pathfinder.service.impl;
 import org.modelmapper.ModelMapper;
 import org.softuni.pathfinder.exceptions.CommentNotFoundException;
 import org.softuni.pathfinder.exceptions.RouteNotFoundException;
-<<<<<<< Updated upstream
+import org.softuni.pathfinder.helpers.LoggedUserHelperService;
 import org.softuni.pathfinder.exceptions.UserNotFoundException;
-=======
 import org.softuni.pathfinder.helpers.LoggedUserHelperService;
 import org.softuni.pathfinder.model.dto.comments.CommentViewDTO;
->>>>>>> Stashed changes
+
 import org.softuni.pathfinder.model.dto.comments.CreateCommentDTO;
 import org.softuni.pathfinder.model.entity.Comment;
 import org.softuni.pathfinder.model.entity.Route;
 import org.softuni.pathfinder.model.entity.User;
 import org.softuni.pathfinder.repository.CommentRepository;
 import org.softuni.pathfinder.repository.RouteRepository;
-import org.softuni.pathfinder.repository.UserRepository;
 import org.softuni.pathfinder.service.CommentService;
-import org.softuni.pathfinder.session.LoggedUser;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -29,24 +23,24 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final RouteRepository routeRepository;
     private final ModelMapper modelMapper;
-    private final LoggedUser loggedUser;
-    private final UserRepository userRepository;
+    private final LoggedUserHelperService loggedUserHelperService;
 
-    public CommentServiceImpl(CommentRepository commentRepository, RouteRepository routeRepository, ModelMapper modelMapper, LoggedUser loggedUser, UserRepository userRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository,
+                              RouteRepository routeRepository,
+                              ModelMapper modelMapper,
+                              LoggedUserHelperService loggedUserHelperService) {
         this.commentRepository = commentRepository;
         this.routeRepository = routeRepository;
         this.modelMapper = modelMapper;
-        this.loggedUser = loggedUser;
-        this.userRepository = userRepository;
+        this.loggedUserHelperService = loggedUserHelperService;
     }
 
     @Override
     public void createComment(CreateCommentDTO createCommentDTO) {
         Route route = this.routeRepository.findById(createCommentDTO.getRouteId()).orElseThrow(
-                        () -> new RouteNotFoundException("Route not found!"));
+                () -> new RouteNotFoundException("Route not found!"));
 
-        User user = this.userRepository.findByUsername(this.loggedUser.getUsername()).orElseThrow(
-                        () -> new UserNotFoundException("User not found!"));
+        User user = loggedUserHelperService.getCurrentUser();
 
         Comment comment = modelMapper.map(createCommentDTO, Comment.class);
         comment.setRoute(route);
@@ -81,5 +75,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void delete(Long id) {
         this.commentRepository.deleteById(id);
+    }
+
+    @Override
+    public Long getMostCommentedRouteId() {
+        return this.commentRepository.getMostCommentedRoutId();
     }
 }

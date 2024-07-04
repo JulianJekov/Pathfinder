@@ -30,12 +30,24 @@ public class PathfinderUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         return this.userRepository.findByUsername(username)
                 .map(this::mapToUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s not found", username)));
     }
 
     private UserDetails mapToUserDetails(User user) {
+
+       return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities(user.getRoles().stream().map(this::grantedAuthority).toList())
+                .build();
+    }
+
+    public GrantedAuthority grantedAuthority(Role role) {
+        return new SimpleGrantedAuthority("ROLE_" + role.getName().name());
+
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
