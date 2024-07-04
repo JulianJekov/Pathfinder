@@ -12,6 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class PathfinderUserDetailService implements UserDetailsService {
 
@@ -26,12 +30,14 @@ public class PathfinderUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       return this.userRepository.findByUsername(username)
+
+        return this.userRepository.findByUsername(username)
                 .map(this::mapToUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s not found", username)));
     }
 
     private UserDetails mapToUserDetails(User user) {
+
        return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
@@ -41,5 +47,17 @@ public class PathfinderUserDetailService implements UserDetailsService {
 
     public GrantedAuthority grantedAuthority(Role role) {
         return new SimpleGrantedAuthority("ROLE_" + role.getName().name());
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities(simpleGrantedAuthorities(user.getRoles()))
+                .build();
+    }
+
+    public List<SimpleGrantedAuthority> simpleGrantedAuthorities(Set<Role> roles) {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().name()))
+                .toList();
     }
 }
